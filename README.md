@@ -1,4 +1,4 @@
-uqbar-math
+uqbar-math [![Build Status](https://travis-ci.org/uqbar-project/uqbar-math.svg?branch=master)](https://travis-ci.org/uqbar-project/uqbar-math)
 ==========
 
 This library extends *Scala* in order to provide better abstractions to support complex algebraic expressions.  
@@ -49,5 +49,3 @@ License
 -------
 
 This code is open source software licensed under the [LGPL v3 License](https://www.gnu.org/licenses/lgpl.html) by [The Uqbar Foundation](http://www.uqbar-project.org/). Feel free to use it accordingly.
-
-[![Build Status](https://travis-ci.org/uqbar-project/uqbar-math.svg?branch=master)](https://travis-ci.org/uqbar-project/uqbar-math)
