@@ -116,8 +116,8 @@ case class MutableVector(var x: Double, var y: Double) extends Vector {
 	 * Sets this vector dimension values to the same ones as the vector given.
 	 */
 	def set(v: Vector) = {
-		this.x = x
-		this.y = y
+		this.x = v.x
+		this.y = v.y
 		this
 	}
 
