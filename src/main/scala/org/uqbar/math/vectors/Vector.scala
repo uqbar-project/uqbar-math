@@ -39,7 +39,7 @@ trait Vector {
 	/**
 	 * Returns the scalar division between this vector and the scalar received.
 	 */
-	def /(d: Double) = (x / d, y / d)
+	def /(d: Double): Vector = (x / d, y / d)
 
 	/**
 	 * Returns the module (or magnitude) of this vector.
