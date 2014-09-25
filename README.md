@@ -51,7 +51,7 @@ Version History
 #### 1.1
 * Added bidirectional AWT Point and Tuple implicit conversions.
 * Added `Vector.random()`.
-* Many small SBT files instead of huge one.
+* SBT refactor.
 * Fixed some vector bugs.
 
 License
