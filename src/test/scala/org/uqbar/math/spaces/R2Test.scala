@@ -6,7 +6,6 @@ import org.scalactic._
 import org.scalatest.matchers.Matcher
 import org.scalatest.matchers.MatchResult
 import org.uqbar.math.spaces.R2._
-import org.uqbar.math.spaces.Axis._
 
 class R2Test extends FreeSpec with Matchers {
 
@@ -48,7 +47,7 @@ class R2Test extends FreeSpec with Matchers {
     val λ = 2.0
     val µ = 5.5
 
-    "Origin should be (0,0)" in { space.origin should equal(0, 0) }
+    "Origin should be (0,0)" in { Origin should equal(0, 0) }
 
     "equality" - {
       "should be consistent" in { v should not(be(null) or be("foo")) }
@@ -72,14 +71,14 @@ class R2Test extends FreeSpec with Matchers {
       "should compute well" in { u + v should equal(u(X) + v(X), u(Y) + v(Y)) }
       "should be commutative" in { u + v should be(v + u) }
       "should be associative" in { u + v + w should (be((u + v) + w) and be(u + (v + w))) }
-      "should have Origin as identity element" in { v + space.origin should be(v) }
-      "against opposite should yield Origin" in { v + -v should be(space.origin) }
+      "should have Origin as identity element" in { v + Origin should be(v) }
+      "against opposite should yield Origin" in { v + -v should be(Origin) }
     }
 
     "subtraction" - {
       "should compute well" in { u - v should equal(u(X) - v(X), u(Y) - v(Y)) }
       "should be same as addition with opposite" in { u - v should be(u + -v) }
-      "should have Origin as identity element" in { v - space.origin should be(v) }
+      "should have Origin as identity element" in { v - Origin should be(v) }
     }
 
     "scalar multiplication" - {
@@ -88,7 +87,7 @@ class R2Test extends FreeSpec with Matchers {
       "should be compatible" in { v * (λ * µ) should be((v * λ) * µ) }
       "should be symmetric" in { λ * v should be(v * λ) }
       "should have 1 as identity element" in { v * 1 should be(v) }
-      "should have 0 as absorbent element" in { v * 0 should be(space.origin) }
+      "should have 0 as absorbent element" in { v * 0 should be(Origin) }
       "against -1 should yield opposite" in { v * -1 should be(-v) }
     }
 
@@ -109,14 +108,14 @@ class R2Test extends FreeSpec with Matchers {
     "distance" - {
       "should compute well" in { v distanceTo (5, 3) should be(5) }
       "should be symmetric" in { v distanceTo u should be(u distanceTo v) }
-      "to Origin should be the vector module" in { v distanceTo space.origin should equal(v.module) }
+      "to Origin should be the vector module" in { v distanceTo Origin should equal(v.module) }
       "to self should be 0" in { v distanceTo v should equal(0) }
     }
 
     "square distance" - {
       "should compute well" in { v squareDistanceTo u should equal(pow(v distanceTo u, 2)) }
       "should be symmetric" in { v squareDistanceTo u should be(u squareDistanceTo v) }
-      "to Origin should be the square of the vector module" in { v squareDistanceTo space.origin should equal(pow(v.module, 2)) }
+      "to Origin should be the square of the vector module" in { v squareDistanceTo Origin should equal(pow(v.module, 2)) }
       "to self should be 0" in { v squareDistanceTo v should be(0) }
     }
 
