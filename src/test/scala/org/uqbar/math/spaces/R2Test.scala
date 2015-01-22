@@ -5,7 +5,7 @@ import org.scalatest._
 import org.scalactic._
 import org.scalatest.matchers.Matcher
 import org.scalatest.matchers.MatchResult
-import org.uqbar.math.spaces.Spaces.R2._
+import org.uqbar.math.spaces.R2._
 import org.uqbar.math.spaces.Axis._
 
 class R2Test extends FreeSpec with Matchers {
