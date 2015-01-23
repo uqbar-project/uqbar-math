@@ -20,7 +20,7 @@ trait AbstractSpace[T] {
   
   def acos: T => T
 
-  def vector(values: T*) = GenericVector(values: _*)
+  def vector(values: T*) = GenericVector(values:_*)
 
   def origin: GenericVector[T] = vector(axisList.map { x => scalarZero }: _*)
 
