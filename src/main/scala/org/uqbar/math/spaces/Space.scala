@@ -20,7 +20,7 @@ trait AbstractSpace[T] {
   
   def acos: T => T
 
-  def vector(values: T*) = GenericVector(values:_*)
+  def vector(values: T*) = new GenericVector(values:_*)
 
   def origin: GenericVector[T] = vector(axisList.map { x => scalarZero }: _*)
 
@@ -44,7 +44,7 @@ trait AbstractSpace[T] {
 
 //Debería ser posible definir un espacio genérico para tipos numéricos...
 //SPAAAAACEEEEEE!
-case class Space(val axisList: Axis*) extends AbstractSpace[Double] {
+class Space(val axisList: Axis*) extends AbstractSpace[Double] {
   override val scalarZero = 0.0
   override val scalarPlus = (x: Double, y: Double) => x + y
   override val scalarByScalar = (x: Double, y: Double) => x * y
@@ -54,6 +54,12 @@ case class Space(val axisList: Axis*) extends AbstractSpace[Double] {
   override val scalarDividedByScalar = (x: Double, y: Double) => x / y
   override val acos = (x: Double) => Math.acos(x)
 }
+
+/**
+ * Por ahora sólo soporta 2 o 3 dimensiones. Hay que ver si se puede mejorar esto, sin sacrificar mucha performance
+ * La idea es que el chequeador de tipos se asegure que el espacio proporcionado es correcto.
+ */
+class CachedSpace(dimensions: Int) extends Space((if(dimensions == 2) Seq(Axis.X, Axis.Y) else Seq(Axis.X, Axis.Y, Axis.Z)):_*) 
 
 trait SpaceContext[T] {
   implicit def space: AbstractSpace[T]

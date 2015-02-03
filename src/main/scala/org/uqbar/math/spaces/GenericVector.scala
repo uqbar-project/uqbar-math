@@ -1,6 +1,6 @@
 package org.uqbar.math.spaces
 
-import scala.collection.mutable.LinkedHashMap
+import scala.collection.mutable.AnyRefMap
 
 //TODO: La clase component puede ser útil, pero creo que va a ser mejor como un caso excepcional, y no como lo normal. Podría hacerse un método que devuelva el "component"
 //case class Component[T](axis: Axis, value: T)(implicit sp: AbstractSpace[T]) {
@@ -13,11 +13,13 @@ import scala.collection.mutable.LinkedHashMap
 //  def unary_- = Component(axis, sp.inverseElement(value))
 //}
 
-case class GenericVector[T](someComponents: T*)(implicit sp: AbstractSpace[T]) {
+class GenericVector[T](someComponents: T*)(implicit sp: AbstractSpace[T]) {
   
-  val componentMap = LinkedHashMap(sp.axisList.zip(someComponents):_*).withDefault { x => sp.defaultFor(x) }
+  private val _componentMap = AnyRefMap(sp.axisList.zip(someComponents):_*).withDefault { ax => sp.defaultFor(ax) }
   
-  def components = componentMap.values.toSeq
+  def componentMap = _componentMap
+  
+  def components = sp.axisList.map( componentMap(_))
 
   def +(x: GenericVector[T]) = sp.plus(this, x)
   
@@ -65,5 +67,8 @@ case class GenericVector[T](someComponents: T*)(implicit sp: AbstractSpace[T]) {
     componentMap.update(sp.axisList(i), c)
   }
   
+  def set(ax:Axis, v:T):Unit = componentMap += ((ax, v))
+
   def set(v:GenericVector[T]):Unit = componentMap.++=(v.componentMap)
+  
 }
