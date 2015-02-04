@@ -1,6 +1,8 @@
-package org.uqbar.math.spaces
+package org.uqbar.math.benchmarks
 
-import R2._
+import org.uqbar.math.spaces.R2._
+import org.uqbar.math.spaces.CachedVector
+import org.uqbar.math.spaces.CachedSpace
 
 object ReadWriteBenchmark extends Benchmark {
   
@@ -16,6 +18,9 @@ object ReadWriteBenchmark extends Benchmark {
       ("Cached read", 
           () => x = v3(X)    
       ),
+      ("Axis read", 
+          () => x = v2(X)    
+      ),
       ("Old read",
           () => x = v2.x
       ),
@@ -24,6 +29,9 @@ object ReadWriteBenchmark extends Benchmark {
       ),
       ("Cached write", 
           () => v3.set(X, x)    
+      ),
+      ("Axis write", 
+          () => v2.setAxis(X, x)    
       ),
       ("Old write",
           () => v2.x = x

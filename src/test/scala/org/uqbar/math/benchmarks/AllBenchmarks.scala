@@ -1,4 +1,4 @@
-package org.uqbar.math.spaces
+package org.uqbar.math.benchmarks
 
 object AllBenchmarks extends Benchmark {
   

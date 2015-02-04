@@ -1,6 +1,8 @@
-package org.uqbar.math.spaces
+package org.uqbar.math.benchmarks
 
-import R2._
+import org.uqbar.math.spaces.R2._
+import org.uqbar.math.spaces.CachedSpace
+import org.uqbar.math.spaces.CachedVector
 
 object CreationBenchmark extends Benchmark {
   

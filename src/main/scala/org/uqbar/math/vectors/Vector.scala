@@ -12,7 +12,7 @@ trait Vector {
   def y: Double
   //It is very convenient to have all vectors understand z
   def z: Double
-
+  
   //*********************************************************************************************
   // QUERYING
   //*********************************************************************************************
@@ -150,6 +150,7 @@ trait Vector {
   // CLONING
   //********************************************************************************************* 
   def copy: this.type
+  
 }
 
 trait AbstractMutableVector extends Vector {
@@ -163,6 +164,8 @@ trait AbstractMutableVector extends Vector {
     this.z = someZ
     this
   }
+  
+  def setAxis(ax: Axis, v: Double) = ax.setOn(this, v)
 
   def x_=(someX: Double): Unit
   def y_=(someY: Double): Unit

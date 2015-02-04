@@ -1,4 +1,4 @@
-package org.uqbar.math.spaces
+package org.uqbar.math.benchmarks
 
 import scala.collection.mutable.AnyRefMap
 import scala.collection.immutable.HashMap
