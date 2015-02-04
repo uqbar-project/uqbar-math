@@ -3,6 +3,8 @@ package org.uqbar.math.vectors
 import scala.math.acos
 import scala.math.sqrt
 import org.uqbar.math.spaces.Axis
+import scala.collection.mutable.AnyRefMap
+import scala.collection.mutable.Map
 
 trait Vector {
 
@@ -10,6 +12,25 @@ trait Vector {
   def y: Double
   //It is very convenient to have all vectors understand z
   def z: Double
+
+  //*********************************************************************************************
+  // QUERYING
+  //*********************************************************************************************
+
+  def apply(ax: Axis) = {
+    ax.getFrom(this)
+  }
+  /**
+   * Returns the list of the components of this vector, ordered by X, Y
+   */
+  def components: Seq[Double] = axes.map(_.getFrom(this))
+  
+  /**
+   * Returns a map of the components
+   */
+  def componentsMap:Map[Axis, Double] = AnyRefMap(axes.zip(components):_*)
+
+  def axes: Seq[Axis]
 
   //*********************************************************************************************
   // BASIC OPERATIONS
@@ -124,23 +145,28 @@ trait Vector {
   //*********************************************************************************************
 
   override def toString = (x, y).toString
+
+  //*********************************************************************************************
+  // CLONING
+  //********************************************************************************************* 
+  def copy: this.type
 }
 
 trait AbstractMutableVector extends Vector {
-  def set(v: Vector):AbstractMutableVector = {
+  def set(v: Vector): AbstractMutableVector = {
     set(v.x, v.y, v.z)
   }
-  
-  def set(someX: Double, someY:Double, someZ:Double = 0):AbstractMutableVector = {
+
+  def set(someX: Double, someY: Double, someZ: Double = 0): AbstractMutableVector = {
     this.x = someX
     this.y = someY
     this.z = someZ
     this
   }
-  
-  def x_=(someX:Double):Unit
-  def y_=(someY:Double):Unit
-  def z_=(someZ:Double):Unit
+
+  def x_=(someX: Double): Unit
+  def y_=(someY: Double): Unit
+  def z_=(someZ: Double): Unit
 
   def operateWith(op: (Double, Double) ⇒ Double)(v: Vector) = set(op(x, v.x), op(y, v.y))
 
@@ -175,18 +201,23 @@ case class MutableVector(var x: Double, var y: Double) extends AbstractMutableVe
    * On 2d Vectors, z is always 0
    */
   def z = 0;
+  
+  //Why array? Because benchmarks shows that it is created around three times faster than other sequences, and, when small, iterated around 50% faster
+  def axes = Array(Axis.X, Axis.Y)
 
   /* NADA. Quizás conviene pensar un mecanismo por el cual un vector bidimensional
    * pueda convertirse en un vector tridimensional. La idea sería que ignore la componente z
    * hasta que se le asigne un valor. Si se lo piden explícitamente, el valor de la componente es 0,
    * por conveniencia, pero al sumar, restar, hacer dot product y todo eso, quiero ignorarlo.
    */
-  def z_=(someZ:Double):Unit = {}
-  
+  def z_=(someZ: Double): Unit = {}
 
+  def copy: this.type = MutableVector(x, y).asInstanceOf[this.type]
 }
 
 case class MutableVector3D(var x: Double, var y: Double, var z: Double) extends AbstractMutableVector {
+  def axes = Array(Axis.X, Axis.Y, Axis.Z)
+  
   override def toString = (x, y, z).toString
 
   override def map(f: Double ⇒ Double): Vector = (f(x), f(y), f(z))
@@ -200,8 +231,10 @@ case class MutableVector3D(var x: Double, var y: Double, var z: Double) extends 
    * Operates over the components of this vector to produce a scalar
    */
   override def flatten[T <% Double](f: (Double, Double) ⇒ T): T = f(f(x, y), z)
-  
+
   override def operateWith(op: (Double, Double) ⇒ Double)(v: Vector) = set(op(x, v.x), op(y, v.y), op(z, v.z))
 
   override def mapSet(op: Double ⇒ Double) = set(op(x), op(y), op(z))
+  
+  def copy: this.type = MutableVector3D(x, y, z).asInstanceOf[this.type]
 }
