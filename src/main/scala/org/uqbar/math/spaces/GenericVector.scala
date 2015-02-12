@@ -1,6 +1,7 @@
 package org.uqbar.math.spaces
 
 import scala.collection.mutable.AnyRefMap
+import scala.reflect.ClassTag
 
 //TODO: La clase component puede ser útil, pero creo que va a ser mejor como un caso excepcional, y no como lo normal. Podría hacerse un método que devuelva el "component"
 //case class Component[T](axis: Axis, value: T)(implicit sp: AbstractSpace[T]) {
@@ -13,13 +14,9 @@ import scala.collection.mutable.AnyRefMap
 //  def unary_- = Component(axis, sp.inverseElement(value))
 //}
 
-class GenericVector[T](someComponents: T*)(implicit sp: AbstractSpace[T]) {
+class GenericVector[T](val components: Array[T])(implicit sp: AbstractSpace[T]) {
   
-  private val _componentMap = AnyRefMap(sp.axisList.zip(someComponents):_*).withDefault { ax => sp.defaultFor(ax) }
-  
-  def componentMap = _componentMap
-  
-  def components = sp.axisList.map( componentMap(_))
+  def componentMap = AnyRefMap(sp.axisList.zip(components):_*).withDefault { ax => sp.defaultFor(ax) }
 
   def +(x: GenericVector[T]) = sp.plus(this, x)
   
@@ -40,9 +37,6 @@ class GenericVector[T](someComponents: T*)(implicit sp: AbstractSpace[T]) {
   def map[B](f:T => B)(implicit foreingSp: AbstractSpace[B]) = 
     foreingSp.vector(components.map(f):_*)
   
-  def flatMap[B](f:T => GenericVector[B])(implicit foreingSp: AbstractSpace[B]) = 
-    foreingSp.vector((components.flatMap(f.andThen { _.components })):_*)
-
   def dotSelf = this ° this   
     
   def module = sp.module(this)
@@ -59,16 +53,16 @@ class GenericVector[T](someComponents: T*)(implicit sp: AbstractSpace[T]) {
   
   def squareDistanceTo(v: GenericVector[T]):T = (v - this).dotSelf
 
-  def apply(ax: Axis) = componentMap(ax)
+  def apply(ax: Axis) = components(ax.index)
   
-  override def toString:String = componentMap.toString().replace("Map", "Vector")
+  override def toString:String = components.toString()
   
-  def set(someComponents:T *):Unit = someComponents.zipWithIndex.foreach { case (c, i) => 
-    componentMap.update(sp.axisList(i), c)
+  def set(someComponents:Array[T]):Unit = someComponents.zipWithIndex.foreach {
+    case (c, i) => components(i) = c
   }
   
-  def set(ax:Axis, v:T):Unit = componentMap += ((ax, v))
+  def set(ax:Axis, v:T):Unit = components.update(ax.index, v)
 
-  def set(v:GenericVector[T]):Unit = componentMap.++=(v.componentMap)
+  def set(v:GenericVector[T]):Unit = set(v.components)
   
 }

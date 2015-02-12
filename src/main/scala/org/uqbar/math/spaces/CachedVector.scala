@@ -8,17 +8,12 @@ import scala.collection.mutable.AnyRefMap
  */
 //TODO: Hacerlo funcionar con otra cosa que no sean doubles
 //TODO: Hacerlo funcionar con más dimensiones. Algunas funciones ya están preparadas para ello. Ver qué onda el espacio
-class CachedVector(someComponents: Double*)(implicit sp: CachedSpace) extends GenericVector[Double]() {
-  private def getCachedComponent(index: Int, ax: Axis) = someComponents.lift(index).getOrElse(sp.defaultFor(ax))
-
-  protected var x: Double = getCachedComponent(0, Axis.X)
-  protected var y: Double = getCachedComponent(1, Axis.Y)
-  protected var z: Double = getCachedComponent(2, Axis.Z)
+class CachedVector(var x:Double, var y:Double,var z : Double = null.asInstanceOf[Double])(implicit sp: CachedSpace) extends GenericVector[Double](Array(x, y, z)) {
 
   override def componentMap =
     AnyRefMap((Axis.X, x), (Axis.Y, y), (Axis.Z, z))
  
-  override def components = Seq(x,y,z)
+  override val components = Array(x,y,z)
 
   override def apply(ax: Axis) = ax match {
     case Axis.X => x
@@ -27,7 +22,7 @@ class CachedVector(someComponents: Double*)(implicit sp: CachedSpace) extends Ge
     case ax => super.apply(ax)
   }
 
-  override def set(someComponents: Double*): Unit = {
+  override def set(someComponents: Array[Double]): Unit = {
     val lifted = someComponents.lift
     x = lifted(0).getOrElse(x)
     y = lifted(1).getOrElse(y)

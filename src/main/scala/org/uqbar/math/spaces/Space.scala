@@ -1,5 +1,7 @@
 package org.uqbar.math.spaces
 
+import scala.reflect.ClassTag
+
 trait AbstractSpace[T] {
 
   implicit def currentSpace = this;
@@ -19,8 +21,12 @@ trait AbstractSpace[T] {
   def scalarSqrt: T => T
   
   def acos: T => T
-
-  def vector(values: T*) = new GenericVector(values:_*)
+  
+  implicit def classTag: ClassTag[T]
+  
+  def vector(values: T*) = new GenericVector(values.toArray)
+  
+  def vector(values: Array[T]) = new GenericVector(values)
 
   def origin: GenericVector[T] = vector(axisList.map { x => scalarZero }: _*)
 
@@ -45,6 +51,9 @@ trait AbstractSpace[T] {
 //Debería ser posible definir un espacio genérico para tipos numéricos...
 //SPAAAAACEEEEEE!
 class Space(val axisList: Axis*) extends AbstractSpace[Double] {
+  
+  def classTag = ClassTag[Double](classOf[Double])
+  
   override val scalarZero = 0.0
   override val scalarPlus = (x: Double, y: Double) => x + y
   override val scalarByScalar = (x: Double, y: Double) => x * y
@@ -64,6 +73,7 @@ class CachedSpace(dimensions: Int) extends Space((if(dimensions == 2) Seq(Axis.X
 trait SpaceContext[T] {
   implicit def space: AbstractSpace[T]
   def vector(values: T*) = space.vector(values: _*)
+  def vector(values: Array[T]) = space.vector(values)
 }
 
 trait DoubleSpaceContext extends SpaceContext[Double] {

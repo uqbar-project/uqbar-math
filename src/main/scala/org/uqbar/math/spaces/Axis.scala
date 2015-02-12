@@ -7,6 +7,8 @@ trait Axis {
   def apply[T](value: T)(implicit sp: AbstractSpace[T]) = (this, value)
   def getFrom(v:Vector): Double
   def setOn(arg: AbstractMutableVector, v: Double)
+  
+  def index: Int
 }
 
 object Axis {
@@ -16,18 +18,21 @@ object Axis {
     def setOn(arg: AbstractMutableVector, v: Double) = {
       arg.x = v
     }
+    val index = 0
   }
   case object Y extends Axis {
     def getFrom(v:Vector) = v.y
     def setOn(arg: AbstractMutableVector, v: Double) = {
       arg.y = v
     }
+    val index = 1
   }
   case object Z extends Axis {
     def getFrom(v:Vector) = v.z
     def setOn(arg: AbstractMutableVector, v: Double) = {
       arg.z = v
     }
+    val index = 2
   }
   
   val axes = Array(X, Y, Z)

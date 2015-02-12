@@ -13,6 +13,9 @@ object CreationBenchmark extends Benchmark {
       ("New Create", 
           () => x = vector(3,4)    
       ),
+      ("New Create With Array", 
+          () => x = vector(Array(3.0,4.0))    
+      ),
       ("Cached Create", 
           () => x = new CachedVector(5,6)(cachedSpace)    
       ),
