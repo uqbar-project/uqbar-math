@@ -28,14 +28,26 @@ class GenericVector[T](val components: Array[T])(implicit sp: AbstractSpace[T]) 
   
   def /(s: T) = sp.scalarDivide(this, s)
   
-  def zipComponentsWith[B, C](f:(T, B) => C)(x:GenericVector[B]) =
-    this.components.zip(x.components).map(f.tupled)
+  def zipComponentsWith[B, C:ClassTag](f:(T, B) => C)(x:GenericVector[B]) = {
+    //Estupidas optimizaciones de velocidad. Averiguar bien si se puede reemplazar por algo más lindo.
+    //Esto reemplaza a : this.components.zip(x.components).map(f.tupled) y funciona alrededor de 5 veces más rápido en mi máquina
+    //Map estaría optimizado. Zip no.
+    
+    val retArray = new Array[C](components.length)
+    var i = 0
+    while(i < retArray.length) {
+      retArray(i) = f(components(i), x.components(i))
+      i = i+1
+    }
+    
+    retArray
+  }
   
-  def zipWith[B, C](f:(T, B) => C)(x:GenericVector[B])(implicit foreignSp: AbstractSpace[C]) = 
-    foreignSp.vector(this.zipComponentsWith(f)(x):_*)
+  def zipWith[B, C:ClassTag](f:(T, B) => C)(x:GenericVector[B])(implicit foreignSp: AbstractSpace[C]) = 
+    foreignSp.vector(this.zipComponentsWith(f)(x))
   
-  def map[B](f:T => B)(implicit foreingSp: AbstractSpace[B]) = 
-    foreingSp.vector(components.map(f):_*)
+  def map[B:ClassTag](f:T => B)(implicit foreingSp: AbstractSpace[B]) = 
+    foreingSp.vector(components.map(f).toArray)
   
   def dotSelf = this ° this   
     

@@ -55,7 +55,7 @@ trait Vector {
   /**
    * Returns the dot product between this vector and the one received.
    */
-  def °(v: Vector): Double = zipWith(_ * _)(v).flatten(_ + _)
+  def °(v: Vector): Double = zipWith(_ * _)(v).reduce(_ + _)
   /**
    * Returns the scalar product between this vector and the scalar received.
    */
@@ -99,7 +99,7 @@ trait Vector {
   /**
    * Operates over the components of this vector to produce a scalar
    */
-  def flatten[T <% Double](f: (Double, Double) ⇒ T): T = f(x, y)
+  def reduce[T <% Double](f: (Double, Double) ⇒ T): T = f(x, y)
 
   //*********************************************************************************************
   // COMPARATIONS
@@ -138,7 +138,7 @@ trait Vector {
   /**
    * Returns the Manhattan distance from this vector to the received one, booth interpreted as a points.
    */
-  def manhattanDistanceTo(v: Vector) = (this - v).flatten(_.toInt.abs + _.toInt.abs)
+  def manhattanDistanceTo(v: Vector) = (this - v).reduce(_.toInt.abs + _.toInt.abs)
 
   //*********************************************************************************************
   // PRINTING
@@ -233,7 +233,7 @@ case class MutableVector3D(var x: Double, var y: Double, var z: Double) extends 
   /**
    * Operates over the components of this vector to produce a scalar
    */
-  override def flatten[T <% Double](f: (Double, Double) ⇒ T): T = f(f(x, y), z)
+  override def reduce[T <% Double](f: (Double, Double) ⇒ T): T = f(f(x, y), z)
 
   override def operateWith(op: (Double, Double) ⇒ Double)(v: Vector) = set(op(x, v.x), op(y, v.y), op(z, v.z))
 
