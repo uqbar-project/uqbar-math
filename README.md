@@ -6,11 +6,9 @@ This library extends *Scala* in order to provide better abstractions to support 
 Setup
 -----
 
-To include this library in your *SBT* project, just add the following lines to your `build.sbt` file:
+To include this library in your *SBT* project, just add the following line to your `build.sbt` file:
 
 ```scala
-resolvers += "Uqbar Central" at "http://uqbar-wiki.org/mvn/releases"
-
 libraryDependencies += "org.uqbar" %% "uqbar-math" % "latest.integration"
 ```
 
