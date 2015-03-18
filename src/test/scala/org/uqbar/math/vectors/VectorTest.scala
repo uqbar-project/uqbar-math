@@ -12,7 +12,7 @@ class VectorTest extends FreeSpec with Matchers {
 	// TEST CASES
 	//*********************************************************************************************
 
-	"vector" - {
+	"vector" - { 
 		val u: Vector = (4, 5)
 		val u2: Vector = (4, 5)
 		val u3: Vector = (4, 5)
@@ -78,26 +78,26 @@ class VectorTest extends FreeSpec with Matchers {
 
 		"module should compute well" in { v.module should be (sqrt(v.x * v.x + v.y * v.y)) }
 
-		"as versor should have module 1" in { v.asVersor.module should be (1) }
+		"as versor should have module 1" in { v.asVersor.module should be (1.0) }
 
 		"distance" - {
-			"should compute well" in { v distanceTo (5, 3) should be (5) }
+			"should compute well" in { v distanceTo (5, 3) should be (5.0) }
 			"should be symmetric" in { v distanceTo u should be (u distanceTo v) }
 			"to Origin should be the vector module" in { v distanceTo Origin should equal (v.module) }
-			"to self should be 0" in { v distanceTo v should be (0) }
+			"to self should be 0" in { v distanceTo v should be (0.0) }
 		}
 
 		"square distance" - {
 			"should compute well" in { v squareDistanceTo u should equal (pow(v distanceTo u, 2)) }
 			"should be symmetric" in { v squareDistanceTo u should be (u squareDistanceTo v) }
 			"to Origin should be the square of the vector module" in { v squareDistanceTo Origin should equal (pow(v.module, 2)) }
-			"to self should be 0" in { v squareDistanceTo v should be (0) }
+			"to self should be 0" in { v squareDistanceTo v should be (0.0) }
 		}
 
 		"manhattan distance" - {
 			"should compute well" in { v manhattanDistanceTo u should be (4) }
 			"should be symmetric" in { v manhattanDistanceTo u should be (u manhattanDistanceTo v) }
-			"to self should be 0" in { v manhattanDistanceTo v should be (0) }
+			"to self should be 0" in { v manhattanDistanceTo v should be (0.0) }
 		}
 	}
 
@@ -111,6 +111,7 @@ class VectorTest extends FreeSpec with Matchers {
 		def areEqual(v: Vector, o: Any) = {
 			o match {
 				case (x: Number, y: Number) => x.doubleValue === v.x.doubleValue +- tolerance && y.doubleValue === v.y.doubleValue +- tolerance
+				case u: Vector => u.x.doubleValue === v.x.doubleValue +- tolerance && u.y.doubleValue === v.y.doubleValue +- tolerance
 				case _ => false
 			}
 		}
@@ -119,7 +120,7 @@ class VectorTest extends FreeSpec with Matchers {
 	implicit val DoubleEquality = new Equality[Double] {
 		def areEqual(d: Double, o: Any) = {
 			o match {
-				case n: Double => d === n +- tolerance
+				case n : Double => d === n +- tolerance
 				case _ => false
 			}
 		}

@@ -2,7 +2,7 @@ name := "uqbar-math"
 
 description := "A math extension for Scala with better abstractions to support complex algebraic expressions"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.6"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
