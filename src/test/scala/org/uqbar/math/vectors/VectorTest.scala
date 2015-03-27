@@ -16,23 +16,23 @@ class VectorTest extends FreeSpec with Matchers {
                            origin: Vector, distanceDestination: Vector, distance: Double, manhattanDistance: Double)
 
   "vector" - {
-    
-    "queries" -{
-      val v: Vector = (1,2,3)
-      
+
+    "queries" - {
+      val v: Vector = (1, 2, 3)
+
       "should be able to query by axis" in {
         v(Axis.X) should be(v.x)
         v(Axis.Y) should be(v.y)
         v(Axis.Z) should be(v.z)
       }
-      
+
       "should be able to get the list of components" in {
-        v.components should equal(Seq(1,2,3))
-        v.componentsMap should equal(Map((Axis.X,1),(Axis.Y,2),(Axis.Z,3)))
+        v.components should equal(Seq(1, 2, 3))
+        v.componentsMap should equal(Map((Axis.X, 1), (Axis.Y, 2), (Axis.Z, 3)))
       }
-      
+
     }
-    
+
     val valuesFor2D = TestSetValues("2D", (4, 5), (4, 5), (4, 5), (1, 6), (-1.5, 3), (0, 0), (5, 3), 5, 4)
     val valuesFor3D = TestSetValues("3D", (4, 5, 6), (4, 5, 6), (4, 5, 6), (1, 6, 1), (-1.5, 3, 4), (0, 0, 0), (5, 10, 8), 9, 9)
 
@@ -49,7 +49,7 @@ class VectorTest extends FreeSpec with Matchers {
       val v: Vector = values.v
       val w: Vector = values.w
       val Origin = values.origin
-      
+
       values.context - {
         "equality" - {
           "should be consistent" in { v should not(be(null) or be("foo")) }
@@ -128,6 +128,29 @@ class VectorTest extends FreeSpec with Matchers {
           "to self should be 0" in { v manhattanDistanceTo v should be(0.0) }
         }
       }
+
+    }
+
+    "cross product" - {
+      val u: Vector = (3, 4 ,7)
+      val v: Vector = (1, 2, 4)
+      val w: Vector = (2, 1, 3)
+      val λ = 2.0
+      
+      "should compute well" in { u x v should equal(2, -5, 2) }
+      "module should be equal to alternative calculation" in { (u x v).module should equal(u.module * v.module * Math.sin(u.angleTo(v)))}
+      "should be anticommutative" in { u x v should equal (-v x u) }
+      "should be distributive over adition" in {u x (v + w) should equal ((u x v) + (u x w))}
+      "should be compatible with scalar multiplication" in {
+        (λ * u) x v should equal (u x (λ * v))
+        (λ * u) x v should equal (λ * (u x v))
+      }
+      "should produce orthogonal vector" in {
+        val r = u x v
+        r.angleTo(v) should equal (Math.PI / 2)
+        r.angleTo(u) should equal (Math.PI / 2)
+      }
+      
     }
   }
 
@@ -140,10 +163,10 @@ class VectorTest extends FreeSpec with Matchers {
   implicit val VectorEquality = new Equality[Vector] {
     def areEqual(v: Vector, o: Any) = {
       o match {
-        case (x: Number, y: Number) => x.doubleValue === v.x.doubleValue +- tolerance && y.doubleValue === v.y.doubleValue +- tolerance
-        case (x: Number, y: Number, z:Number) => x.doubleValue === v.x.doubleValue +- tolerance && y.doubleValue === v.y.doubleValue +- tolerance && z.doubleValue === v.z.doubleValue +- tolerance
-        case u: Vector              => u.x.doubleValue === v.x.doubleValue +- tolerance && u.y.doubleValue === v.y.doubleValue +- tolerance
-        case _                      => false
+        case (x: Number, y: Number)            => x.doubleValue === v.x.doubleValue +- tolerance && y.doubleValue === v.y.doubleValue +- tolerance
+        case (x: Number, y: Number, z: Number) => x.doubleValue === v.x.doubleValue +- tolerance && y.doubleValue === v.y.doubleValue +- tolerance && z.doubleValue === v.z.doubleValue +- tolerance
+        case u: Vector                         => u.x.doubleValue === v.x.doubleValue +- tolerance && u.y.doubleValue === v.y.doubleValue +- tolerance
+        case _                                 => false
       }
     }
   }

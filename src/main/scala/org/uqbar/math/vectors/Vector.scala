@@ -79,6 +79,12 @@ trait Vector {
    * Returns a vector with the same direction as this, but magnitude 1.
    */
   def asVersor = this / module
+  
+  /**
+   * Returns a vector that is the result of applying cross product of this vector with the other.
+   * Note that in 2D vectors, z is assumed to be 0
+   */
+  def x(v: Vector):Vector = (y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x)
 
   //*********************************************************************************************
   // HIGHER-ORDER OPERATIONS. These have to be redefined for every dimension added.
